@@ -1,0 +1,203 @@
+body {
+    background-color: #bd4e4e;
+    font-family: 'Lato', sans-serif;
+}
+
+::selection {
+    background-color: #f2caca;
+    color: #bd4e4e;
+}
+
+#pomodoro-heading {
+    color: #f2caca;
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 0;
+    margin-top: 20px;
+    margin-left: 20px;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+#pomodoro-timer {
+    background-color: #a14343;
+    height: 220px;
+    width: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    flex-direction: column;
+    border-radius: 50%;
+    margin-top: 20px;
+}
+
+#timer-modes-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 140px;
+    background: transparent;
+    border-radius: 50px;
+    height: 40px;
+    width: 130px;
+}
+
+#pomodoro-timer-mode {
+    background: #91b98e;
+    border-radius: 50px;
+    height: 35px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #f2caca;
+    cursor: pointer;
+    border: none;
+}
+
+#pomodoro-timer-mode-img {
+    height: 80%;
+    cursor: pointer;
+    color: #445b42;
+}
+
+#short-break-mode {
+    background: #91b98e;
+    border-radius: 50px;
+    height: 35px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #f2caca;
+    cursor: pointer;
+    border: none;
+}
+
+#short-break-mode svg {
+    height: 80%;
+    cursor: pointer;
+    color: #445b42;
+}
+
+#long-break-mode {
+    background: #91b98e;
+    border-radius: 50px;
+    height: 35px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #f2caca;
+    cursor: pointer;
+    border: none;
+}
+
+#long-break-mode svg {
+    height: 80%;
+    opacity: 100%;
+    cursor: pointer;
+    color: #445b42;
+}
+
+#pomodoro-timer-display {
+    font-size: 60px;
+    color: #f2caca;
+    font-weight: 800;
+    position: absolute;
+}
+
+#short-break-display {
+    font-size: 60px;
+    color: #f2caca;
+    font-weight: 800;
+    position: absolute;
+    display: none;
+}
+
+#long-break-display {
+    font-size: 60px;
+    color: #f2caca;
+    font-weight: 800;
+    position: absolute;
+    display: none;
+}
+
+#pomodoro-timer-buttons {
+    position: absolute;
+    margin-top: 140px;
+    width: 115px;
+    height: 40px;
+    border-radius: 50px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#pomodoro-timer-start {
+    position: absolute;
+    background: #bd4e4e;
+    border: none;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 50px;
+}
+
+#pomodoro-timer-start svg {
+    height: 80%;
+    cursor: pointer;
+    color: #f2caca;
+}
+
+#pomodoro-timer-pause {
+    position: absolute;
+    background: #bd4e4e;
+    border: none;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    z-index: 2;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    margin-right: 50px;
+}
+
+#pomodoro-timer-pause svg {
+    height: 80%;
+    cursor: pointer;
+    color: #f2caca;
+}
+
+#pomodoro-timer-reset {
+    position: absolute;
+    background: #bd4e4e;
+    border: none;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 50px;
+}
+
+#pomodoro-timer-reset svg {
+    height: 80%;
+    cursor: pointer;
+    color: #f2caca;
+}
