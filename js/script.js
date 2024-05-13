@@ -172,6 +172,24 @@ function timerCountdown() {
         clearInterval(timer);
         pomodoroTime.innerHTML = "00:00";
         pauseButton.style.display = 'none';
+        playButton.style.display = 'flex';
+
+        if (pomodoroMode) {
+            pomodoroMode = false;
+            shortBreakMode = true;
+
+            pauseButton.style.display = 'flex';
+            shortBreakButton.style.background = '#f2caca';
+            shortBreakButton.style.boxShadow = '0px 0px 8px #f2caca';
+            shortBreakButtonImg.style.color = '#bd4e4e';
+
+            pomodoroButton.style.background = '#91b98e';
+            pomodoroButton.style.boxShadow = 'none';
+            pomodoroButtonImg.style.color = '#445b42';
+
+            updateTimerDisplay();
+            timerCountdownStart(shortBreakTimer);
+        }
     } else if (this.seconds === 0) {
         this.seconds = 60;
         this.minutes--;
@@ -240,3 +258,83 @@ function resetTimer() {
     timerCountdownReset();
 }
 
+
+// FUNCTIONS FOR KANBAN BOARD
+let pendingTasksBody = document.getElementById('pending-tasks-body');
+let inProgressTasksBody = document.getElementById('in-progress-tasks-body');
+let completedTasksBody = document.getElementById('completed-tasks-body');
+
+function allowDrop(ev) {
+    ev.preventDefault();
+  }
+  
+  function drag(ev) {
+    const parentElement = ev.target.parentElement;
+    if (parentElement.id === 'completed-tasks-body') {
+      return false; 
+    }
+    ev.dataTransfer.setData("text", ev.target.id);
+  }
+  
+  function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+
+    if (ev.target.id === 'pending-tasks-body') {
+        document.getElementById(data).style.backgroundColor = '#f2caca';
+    } else if (ev.target.id === 'in-progress-tasks-body') {
+        document.getElementById(data).style.backgroundColor = '#f2e6f2';
+    } else if (ev.target.id === 'completed-tasks-body') {
+        document.getElementById(data).style.backgroundColor = '#c9f2c9';
+    }
+  }
+
+    let taskNameInput = document.getElementById('task-card-title');
+    let taskDescriptionInput = document.getElementById('task-card-description');
+    let taskCategoryInput = document.getElementById('task-card-category');
+    let taskDateTimeInput = document.getElementById('task-card-datetime');
+
+    class Task {
+    constructor(taskName, taskDescription, taskCategory = null, taskDateTime) {
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.taskCategory = taskCategory;
+        this.taskDateTime = taskDateTime;
+    }
+
+    getTaskName() {
+        return this.taskName;
+    }
+
+    getTaskDescription() {
+        return this.taskDescription;
+    }
+
+    getTaskCategory() {
+        return this.taskCategory;
+    }
+
+    getTaskDateTime() {
+        return this.taskDateTime;
+    }
+
+    setTaskName(taskName) {
+        this.taskName = taskName;
+    }
+
+    setTaskDescription(taskDescription) {
+        this.taskDescription = taskDescription;
+    }
+
+    setTaskCategory(taskCategory) {
+        this.taskCategory = taskCategory;
+    }
+
+    setTaskDateTime(taskDateTime) {
+        this.taskDateTime = taskDateTime;
+    }
+
+    
+
+    }

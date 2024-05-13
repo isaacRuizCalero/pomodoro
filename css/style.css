@@ -57,6 +57,7 @@ body {
     color: #f2caca;
     cursor: pointer;
     border: none;
+    transition: 0.5s;
 }
 
 #pomodoro-timer-mode-img {
@@ -78,6 +79,7 @@ body {
     color: #f2caca;
     cursor: pointer;
     border: none;
+    transition: 0.5s;
 }
 
 #short-break-mode svg {
@@ -99,6 +101,7 @@ body {
     color: #f2caca;
     cursor: pointer;
     border: none;
+    transition: 0.5s;
 }
 
 #long-break-mode svg {
@@ -200,4 +203,142 @@ body {
     height: 80%;
     cursor: pointer;
     color: #f2caca;
+}
+
+#kanban-container {
+    width: 80%;
+    height: 350px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#pending-tasks-container,
+#in-progress-tasks-container,
+#completed-tasks-container {
+    width: 30%;
+    height: 100%;
+    background: #a14343;
+    border-radius: 10px;
+}
+
+#pending-tasks-heading, 
+#in-progress-tasks-heading,
+#completed-tasks-heading {
+    color: #f2caca;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    margin-top: 15px;
+    margin-left: 20px;
+}
+
+.task-body {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    height: 266px;
+    width: 324px;
+    overflow-y: auto;
+}
+
+.task-card {
+    background: #91b98e;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 65px;
+    width: 90%;
+    cursor: grab;
+}
+
+.task-card-heading {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-card-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.task-card-delete-button {
+    background: #d64646;
+    border: none;
+    border-radius: 5px;
+    height: 25px;
+    width: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.task-card-delete-button svg {
+    height: 100%;
+    color: #ffffff;
+}
+
+.task-card-description {
+    font-style: italic;
+}
+
+.task-card-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-card-category {
+    background: #753073;
+    border-radius: 50px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.task-card-category p{
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+}
+
+.task-date-time {
+    font-size: 12px;
+    font-weight: 700;
+
+}
+
+#add-task-button {
+    background: #f2caca;
+    border: none;
+    border-radius: 20px;
+    height: 64px;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#add-task-button svg {
+    height: 40%;
+    color: #bd4e4e;
+}
+
+#add-task-button p {
+    margin: 0;
+    margin-left: 5px;
+    font-size: 24px;
+    font-weight: 800;
+    color: #bd4e4e;
 }
