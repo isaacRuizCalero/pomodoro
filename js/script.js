@@ -263,6 +263,7 @@ function resetTimer() {
 let pendingTasksBody = document.getElementById('pending-tasks-body');
 let inProgressTasksBody = document.getElementById('in-progress-tasks-body');
 let completedTasksBody = document.getElementById('completed-tasks-body');
+let addTaskButton = document.getElementById('add-task-button');
 
 function allowDrop(ev) {
     ev.preventDefault();
@@ -271,8 +272,9 @@ function allowDrop(ev) {
   function drag(ev) {
     const parentElement = ev.target.parentElement;
     if (parentElement.id === 'completed-tasks-body') {
-      return false; 
+        return false; 
     }
+
     ev.dataTransfer.setData("text", ev.target.id);
   }
   
@@ -283,58 +285,226 @@ function allowDrop(ev) {
 
     if (ev.target.id === 'pending-tasks-body') {
         document.getElementById(data).style.backgroundColor = '#f2caca';
+        newTask.setTaskStatus = 'pending';
     } else if (ev.target.id === 'in-progress-tasks-body') {
         document.getElementById(data).style.backgroundColor = '#f2e6f2';
+        newTask.setTaskStatus = 'in-progress';
     } else if (ev.target.id === 'completed-tasks-body') {
         document.getElementById(data).style.backgroundColor = '#c9f2c9';
+        document.getElementById(data).style.textDecoration = "line-through";
+        newTask.setTaskStatus = 'completed';
     }
   }
+
+//   function drop(ev) {
+//     ev.preventDefault();
+//     var data = ev.dataTransfer.getData("text");
+//     const draggedTask = document.getElementById(data);
+//     const targetContainer = ev.target.parentElement;
+  
+//     ev.target.appendChild(draggedTask);
+  
+//     // Update task status based on target container
+//     const newTaskStatus = targetContainer.id.split('-')[0]; // Extract status from container id (e.g., 'pending-tasks-body' becomes 'pending')
+//     draggedTask.querySelector('.task-card-status').textContent = newTaskStatus;
+  
+//     // Create a new Task object with the updated status (assuming you have a reference to the task object)
+//     const updatedTask = new Task(
+//       // Assuming you have getters for task properties:
+//       task.getTaskName(),
+//       task.getTaskDescription(),
+//       task.getTaskCategory(),
+//       task.getTaskDateTime(),
+//       newTaskStatus
+//     );
+  
+//     // Update localStorage with the updated task object (assuming you have a function to handle this)
+//     updateLocalStorageWithTask(updatedTask);
+  
+//     // Update task background color based on status
+//     switch (newTaskStatus) {
+//       case 'pending':
+//         draggedTask.style.backgroundColor = '#f2caca';
+//         break;
+//       case 'in-progress':
+//         draggedTask.style.backgroundColor = '#f2e6f2';
+//         break;
+//       case 'completed':
+//         draggedTask.style.backgroundColor = '#c9f2c9';
+//         draggedTask.style.textDecoration = "line-through";
+//         break;
+//     }
+//   }
+  
+
+  window.addEventListener('load', function() {
+        localStorage.getItem('task');
+    });
 
     let taskNameInput = document.getElementById('task-card-title');
     let taskDescriptionInput = document.getElementById('task-card-description');
     let taskCategoryInput = document.getElementById('task-card-category');
     let taskDateTimeInput = document.getElementById('task-card-datetime');
 
+    addTaskButton.addEventListener('click', function() {
+        let addTaskForm = document.getElementById('add-task-form');
+        addTaskForm.style.display = 'flex';
+    });
+
+    function hideForm() {
+        let addTaskForm = document.getElementById('add-task-form');
+        addTaskForm.style.display = 'none';
+    }
+
+
+    function addNewTask() {
+        let taskName = document.getElementById('task-title').value;
+        let taskDescription = document.getElementById('task-description').value;
+        let taskCategory = document.getElementById('task-category').value;
+
+        // Get current date and time
+        let time = new Date();
+        let year = time.getFullYear();
+        let month = time.getMonth() + 1;
+        let day = time.getDate();
+        let hours = time.getHours();
+        let minutes = time.getMinutes();
+
+        let taskDateTime = `${day}/${month}/${year} · ${hours}:${minutes}`;
+
+        // Create new task
+        let newTask = new Task(taskName, taskDescription, taskCategory, taskDateTime, taskStatus = 'pending');
+
+        // Create task card
+        let taskCard = document.createElement('div');
+        taskCard.classList.add('task-card');
+        taskCard.draggable = true;
+        taskCard.id = 'drag' + (pendingTasksBody.children.length + 1);
+        taskCard.setAttribute('ondragstart', 'drag(event)');
+
+        let taskCardHeading = document.createElement('div');
+        taskCardHeading.classList.add('task-card-heading');
+
+        let taskCardTitle = document.createElement('div');
+        taskCardTitle.classList.add('task-card-title');
+        taskCardTitle.textContent = newTask.getTaskName();
+
+        let taskCardDeleteButton = document.createElement('button');
+        taskCardDeleteButton.classList.add('task-card-delete-button');
+        taskCardDeleteButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z"/></svg>';
+        taskCardDeleteButton.addEventListener('click', function() {
+            taskCard.remove();
+        });
+
+        let taskCardBody = document.createElement('div');
+        taskCardBody.classList.add('task-card-body');
+
+        let taskCardDescription = document.createElement('div');
+        taskCardDescription.classList.add('task-card-description');
+        taskCardDescription.textContent = newTask.getTaskDescription();
+
+        let taskCardFooter = document.createElement('div');
+        taskCardFooter.classList.add('task-card-footer');
+
+        taskDateTime = document.createElement('div');
+        taskDateTime.classList.add('task-date-time');
+        taskDateTime.textContent = newTask.getTaskDateTime();
+
+        let taskCardCategory = document.createElement('div');
+        taskCardCategory.classList.add('task-card-category');
+        taskCardCategory.innerHTML = `<p>${newTask.getTaskCategory()}</p>`;
+        
+        if (taskCardCategory.textContent === 'none') {
+            taskCardCategory.style.display = 'none';    
+        } else if (taskCardCategory.textContent === 'front-end') {
+            taskCardCategory.style.backgroundColor = '#f2caca';
+        } else if (taskCardCategory.textContent === 'back-end') {
+            taskCardCategory.style.backgroundColor = '#f2e6f2';
+        } else if (taskCardCategory.textContent === 'design') {
+            taskCardCategory.style.backgroundColor = '#c9f2c9';
+        } 
+
+        let taskCardStatus = document.createElement('div');
+        taskCardStatus.classList.add('task-card-status');
+        taskCardStatus.textContent = newTask.getTaskStatus();
+
+
+        taskCardHeading.appendChild(taskCardTitle);
+        taskCardHeading.appendChild(taskCardDeleteButton);
+
+        taskCardBody.appendChild(taskCardDescription);
+
+        taskCardFooter.appendChild(taskDateTime);
+        taskCardFooter.appendChild(taskCardCategory);
+        taskCardFooter.appendChild(taskCardStatus);
+
+        taskCard.appendChild(taskCardHeading);
+        taskCard.appendChild(taskCardBody);
+        taskCard.appendChild(taskCardFooter);
+        
+
+        pendingTasksBody.appendChild(taskCard);
+
+        console.log('Task added');
+        console.log(newTask.getTaskName());
+        console.log(newTask.getTaskDescription());
+        console.log(newTask.getTaskCategory());
+        console.log(newTask.getTaskDateTime());
+        console.log(newTask.getTaskStatus());
+
+        localStorage.setItem('task', JSON.stringify(newTask));
+
+        document.getElementById('add-task-form-body').reset();
+        hideForm();
+    }
+
     class Task {
-    constructor(taskName, taskDescription, taskCategory = null, taskDateTime) {
-        this.taskName = taskName;
-        this.taskDescription = taskDescription;
-        this.taskCategory = taskCategory;
-        this.taskDateTime = taskDateTime;
-    }
+        constructor(taskName, taskDescription, taskCategory, taskDateTime, taskStatus) {
+            this.taskName = taskName;
+            this.taskDescription = taskDescription;
+            this.taskCategory = taskCategory;
+            this.taskDateTime = taskDateTime;
+            this.taskStatus = taskStatus;
+        }
 
-    getTaskName() {
-        return this.taskName;
-    }
+        getTaskName() {
+            return this.taskName;
+        }
 
-    getTaskDescription() {
-        return this.taskDescription;
-    }
+        getTaskDescription() {
+            return this.taskDescription;
+        }
 
-    getTaskCategory() {
-        return this.taskCategory;
-    }
+        getTaskCategory() {
+            return this.taskCategory;
+        }
 
-    getTaskDateTime() {
-        return this.taskDateTime;
-    }
+        getTaskDateTime() {
+            return this.taskDateTime;
+        }
 
-    setTaskName(taskName) {
-        this.taskName = taskName;
-    }
+        getTaskStatus() {
+            return this.taskStatus;
+        }
 
-    setTaskDescription(taskDescription) {
-        this.taskDescription = taskDescription;
-    }
+        setTaskName(taskName) {
+            this.taskName = taskName;
+        }
 
-    setTaskCategory(taskCategory) {
-        this.taskCategory = taskCategory;
-    }
+        setTaskDescription(taskDescription) {
+            this.taskDescription = taskDescription;
+        }
 
-    setTaskDateTime(taskDateTime) {
-        this.taskDateTime = taskDateTime;
-    }
+        setTaskCategory(taskCategory) {
+            this.taskCategory = taskCategory;
+        }
 
+        setTaskDateTime(taskDateTime) {
+            this.taskDateTime = taskDateTime;
+        }
+
+        setTaskStatus(taskStatus) {
+            this.taskStatus = taskStatus;
+        }
+    }
     
-
-    }

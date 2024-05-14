@@ -61,7 +61,7 @@
             </h1>
 
             <div class="task-body" id="pending-tasks-body" ondrop="drop(event)" ondragover="allowDrop(event)">
-                <div class="task-card" id="drag1" draggable="true" ondragstart="drag(event)">
+                <!-- <div class="task-card" id="drag1" draggable="true" ondragstart="drag(event)">
                     <div class="task-card-heading">
                         <div class="task-card-title">
                             Task 1
@@ -79,14 +79,14 @@
 
                     <div class="task-card-footer">
                         <div class="task-date-time">
-                            12:34 PM
+                            12/12/2024 · 12:34 PM
                         </div>
 
                         <div class="task-card-category">
                             <p>front-end</p>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div id="in-progress-tasks-container">
@@ -107,6 +107,36 @@
 
             </div>
         </div>
+    </div>
+
+    <div id="add-task-form">
+        <!-- He intentat fer el prevent submit si hi ha dades buides pero no ho he acosneguit -->
+        <form id="add-task-form-body">
+            <div id="add-task-form-heading">
+                Add new task
+            </div>
+
+            <div id="add-task-form-inputs">
+                <input type="text" id="task-title" placeholder="Task title" required>
+                <textarea id="task-description" placeholder="Task description" required></textarea>
+                <select id="task-category">
+                    <option value="none" selected disabled hidden>Task category</option>
+                    <option value="front-end">Front-end</option>
+                    <option value="back-end">Back-end</option>
+                    <option value="design">Design</option>
+                </select>
+            </div>
+
+            <div id="add-task-form-buttons">
+                <button type="button" id="add-task-form-submit" onclick="addNewTask()">
+                    Add task
+                </button>
+
+                <button type="button" id="add-task-form-cancel" onclick="hideForm()">
+                    Cancel
+                </button>
+            </div>
+        </form>
     </div>
 
     <script src="js/script.js"></script>
