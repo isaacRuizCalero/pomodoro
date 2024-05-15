@@ -15,6 +15,8 @@ let pomodoroMode = false;
 let shortBreakMode = false;
 let longBreakMode = false;
 
+let alarmSound = document.getElementById('alarmSound');
+
 window.addEventListener('load', function() {
     pomodoroMode = true;
     shortBreakMode = false;
@@ -174,6 +176,8 @@ function timerCountdown() {
         pauseButton.style.display = 'none';
         playButton.style.display = 'flex';
 
+        alarmSound.play();
+
         if (pomodoroMode) {
             pomodoroMode = false;
             shortBreakMode = true;
@@ -189,6 +193,8 @@ function timerCountdown() {
 
             updateTimerDisplay();
             timerCountdownStart(shortBreakTimer);
+
+            alarmSound.play();
         }
     } else if (this.seconds === 0) {
         this.seconds = 60;
@@ -208,11 +214,6 @@ function timerCountdownPause() {
 }
 
 function timerCountdownReset() {
-    // pomodoroTime.innerHTML = "25:00";
-    // pomodoroTimer.minutes = 24;
-    // pomodoroTimer.seconds = 60;
-    // clearInterval(timer);
-
     if (pomodoroMode) {
         pomodoroTime.innerHTML = "25:00";
         pomodoroTimer.minutes = 24;
@@ -236,10 +237,19 @@ function startTimer() {
     pauseButton.style.display = 'flex';
 
     if (pomodoroMode) {
+        pomodoroTime.innerHTML = "25:00";
+        pomodoroTimer.minutes = 24;
+        pomodoroTimer.seconds = 60;
         timerCountdownStart(pomodoroTimer);
     } else if (shortBreakMode) {
+        pomodoroTime.innerHTML = "05:00";
+        shortBreakTimer.minutes = 4;
+        shortBreakTimer.seconds = 60;
         timerCountdownStart(shortBreakTimer);
     } else if (longBreakMode) {
+        pomodoroTime.innerHTML = "15:00";
+        longBreakTimer.minutes = 14;
+        longBreakTimer.seconds = 60;
         timerCountdownStart(longBreakTimer);
     }
 }
@@ -281,65 +291,52 @@ function allowDrop(ev) {
   function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
-    ev.target.appendChild(document.getElementById(data));
+    const draggedTask = document.getElementById(data);
+    const targetContainer = ev.target.parentElement;
+  
+    ev.target.appendChild(draggedTask);
 
-    if (ev.target.id === 'pending-tasks-body') {
-        document.getElementById(data).style.backgroundColor = '#f2caca';
-        newTask.setTaskStatus = 'pending';
-    } else if (ev.target.id === 'in-progress-tasks-body') {
-        document.getElementById(data).style.backgroundColor = '#f2e6f2';
-        newTask.setTaskStatus = 'in-progress';
-    } else if (ev.target.id === 'completed-tasks-body') {
-        document.getElementById(data).style.backgroundColor = '#c9f2c9';
-        document.getElementById(data).style.textDecoration = "line-through";
-        newTask.setTaskStatus = 'completed';
+
+    const newTaskStatus = targetContainer.id.split('-')[0]; 
+
+    if (newTaskStatus === 'completed') {
+        draggedTask.querySelector('.task-card-status').textContent = newTaskStatus;
+    } else {
+        draggedTask.querySelector('.task-card-status').textContent = '';
     }
+    
+
+    // if (newTaskStatus === 'pending') {
+    //     localStorage.setItem('pendingTask', draggedTask.outerHTML);
+
+    //     localStorage.removeItem('task');
+    //     localStorage.removeItem('inProgressTask');
+    //     localStorage.removeItem('completedTask');
+    //     draggedTask.style.backgroundColor = '#f2caca';
+    // }
+    // else if (newTaskStatus === 'in') {
+    //     localStorage.setItem('inProgressTask', draggedTask.outerHTML);
+
+    //     localStorage.removeItem('task');
+    //     localStorage.removeItem('pendingTask');
+    //     localStorage.removeItem('completedTask');
+    //     taskCardDeleteButton.addEventListener('click', function() {
+    //         taskCard.remove();
+    //     });
+    //     draggedTask.style.backgroundColor = '#f2e6f2';
+    // }
+    // else if (newTaskStatus === 'completed') {
+    //     localStorage.setItem('completedTask', draggedTask.outerHTML);
+
+    //     localStorage.removeItem('task');
+    //     localStorage.removeItem('pendingTask');
+    //     localStorage.removeItem('inProgressTask');
+    //     taskCardDeleteButton.addEventListener('click', function() {
+    //         taskCard.remove();
+    //     });
+    //     draggedTask.style.backgroundColor = '#c9f2c9';
+    // }
   }
-
-//   function drop(ev) {
-//     ev.preventDefault();
-//     var data = ev.dataTransfer.getData("text");
-//     const draggedTask = document.getElementById(data);
-//     const targetContainer = ev.target.parentElement;
-  
-//     ev.target.appendChild(draggedTask);
-  
-//     // Update task status based on target container
-//     const newTaskStatus = targetContainer.id.split('-')[0]; // Extract status from container id (e.g., 'pending-tasks-body' becomes 'pending')
-//     draggedTask.querySelector('.task-card-status').textContent = newTaskStatus;
-  
-//     // Create a new Task object with the updated status (assuming you have a reference to the task object)
-//     const updatedTask = new Task(
-//       // Assuming you have getters for task properties:
-//       task.getTaskName(),
-//       task.getTaskDescription(),
-//       task.getTaskCategory(),
-//       task.getTaskDateTime(),
-//       newTaskStatus
-//     );
-  
-//     // Update localStorage with the updated task object (assuming you have a function to handle this)
-//     updateLocalStorageWithTask(updatedTask);
-  
-//     // Update task background color based on status
-//     switch (newTaskStatus) {
-//       case 'pending':
-//         draggedTask.style.backgroundColor = '#f2caca';
-//         break;
-//       case 'in-progress':
-//         draggedTask.style.backgroundColor = '#f2e6f2';
-//         break;
-//       case 'completed':
-//         draggedTask.style.backgroundColor = '#c9f2c9';
-//         draggedTask.style.textDecoration = "line-through";
-//         break;
-//     }
-//   }
-  
-
-  window.addEventListener('load', function() {
-        localStorage.getItem('task');
-    });
 
     let taskNameInput = document.getElementById('task-card-title');
     let taskDescriptionInput = document.getElementById('task-card-description');
@@ -362,7 +359,6 @@ function allowDrop(ev) {
         let taskDescription = document.getElementById('task-description').value;
         let taskCategory = document.getElementById('task-category').value;
 
-        // Get current date and time
         let time = new Date();
         let year = time.getFullYear();
         let month = time.getMonth() + 1;
@@ -372,10 +368,8 @@ function allowDrop(ev) {
 
         let taskDateTime = `${day}/${month}/${year} · ${hours}:${minutes}`;
 
-        // Create new task
-        let newTask = new Task(taskName, taskDescription, taskCategory, taskDateTime, taskStatus = 'pending');
+        let newTask = new Task(taskName, taskDescription, taskCategory, taskDateTime, taskStatus = '');
 
-        // Create task card
         let taskCard = document.createElement('div');
         taskCard.classList.add('task-card');
         taskCard.draggable = true;
@@ -385,6 +379,9 @@ function allowDrop(ev) {
         let taskCardHeading = document.createElement('div');
         taskCardHeading.classList.add('task-card-heading');
 
+        let taskCardTitleAndCategory = document.createElement('div');
+        taskCardTitleAndCategory.classList.add('task-card-title-and-category');
+
         let taskCardTitle = document.createElement('div');
         taskCardTitle.classList.add('task-card-title');
         taskCardTitle.textContent = newTask.getTaskName();
@@ -393,7 +390,20 @@ function allowDrop(ev) {
         taskCardDeleteButton.classList.add('task-card-delete-button');
         taskCardDeleteButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z"/></svg>';
         taskCardDeleteButton.addEventListener('click', function() {
-            taskCard.remove();
+            let deleteConfirmation = document.getElementById('delete-confirmation-modal');
+            let deleteConfirmationCloseButton = document.getElementById('delete-confirmation-modal-no');
+            let deleteConfirmationConfirmButton = document.getElementById('delete-confirmation-modal-yes');
+            deleteConfirmation.style.display = 'flex';
+    
+            deleteConfirmationConfirmButton.addEventListener('click', function() {
+                deleteConfirmation.style.display = 'none';
+                taskCard.remove();
+            }
+            );
+    
+            deleteConfirmationCloseButton.addEventListener('click', function() {
+                deleteConfirmation.style.display = 'none';
+            });
         });
 
         let taskCardBody = document.createElement('div');
@@ -417,25 +427,26 @@ function allowDrop(ev) {
         if (taskCardCategory.textContent === 'none') {
             taskCardCategory.style.display = 'none';    
         } else if (taskCardCategory.textContent === 'front-end') {
-            taskCardCategory.style.backgroundColor = '#f2caca';
+            taskCardCategory.style.backgroundColor = 'rgb(115 125 200)';
         } else if (taskCardCategory.textContent === 'back-end') {
-            taskCardCategory.style.backgroundColor = '#f2e6f2';
+            taskCardCategory.style.backgroundColor = 'rgb(50 197 132)';
         } else if (taskCardCategory.textContent === 'design') {
-            taskCardCategory.style.backgroundColor = '#c9f2c9';
+            taskCardCategory.style.backgroundColor = 'rgb(162 69 142)';
         } 
 
         let taskCardStatus = document.createElement('div');
         taskCardStatus.classList.add('task-card-status');
         taskCardStatus.textContent = newTask.getTaskStatus();
 
+        taskCardTitleAndCategory.appendChild(taskCardTitle);
+        taskCardTitleAndCategory.appendChild(taskCardCategory);
 
-        taskCardHeading.appendChild(taskCardTitle);
+        taskCardHeading.appendChild(taskCardTitleAndCategory);
         taskCardHeading.appendChild(taskCardDeleteButton);
 
         taskCardBody.appendChild(taskCardDescription);
 
         taskCardFooter.appendChild(taskDateTime);
-        taskCardFooter.appendChild(taskCardCategory);
         taskCardFooter.appendChild(taskCardStatus);
 
         taskCard.appendChild(taskCardHeading);
@@ -452,10 +463,25 @@ function allowDrop(ev) {
         console.log(newTask.getTaskDateTime());
         console.log(newTask.getTaskStatus());
 
-        localStorage.setItem('task', JSON.stringify(newTask));
-
         document.getElementById('add-task-form-body').reset();
         hideForm();
+    }
+
+    function openDeleteConfirmation() {
+        let deleteConfirmation = document.getElementById('delete-confirmation-modal');
+        let deleteConfirmationCloseButton = document.getElementById('delete-confirmation-modal-no');
+        let deleteConfirmationConfirmButton = document.getElementById('delete-confirmation-modal-yes');
+        deleteConfirmation.style.display = 'flex';
+
+        deleteConfirmationConfirmButton.addEventListener('click', function() {
+            deleteConfirmation.style.display = 'none';
+            taskCard.remove();
+        }
+        );
+
+        deleteConfirmationCloseButton.addEventListener('click', function() {
+            deleteConfirmation.style.display = 'none';
+        });
     }
 
     class Task {
